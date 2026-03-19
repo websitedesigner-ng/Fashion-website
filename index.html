@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DRÈSS — Contemporary Fashion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #F5F0E8;
+      --warm-white: #FBF9F5;
+      --ink: #1A1714;
+      --muted: #7A7268;
+      --accent: #C9A96E;
+      --accent-light: #E8D5B0;
+      --border: #E2DBD0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2rem;
+      background: rgba(251, 249, 245, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; letter-spacing: .2em;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-size: .82rem; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-size: .78rem; font-weight: 500; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink);
+      border: 1.5px solid var(--ink); padding: .5rem 1.2rem;
+      text-decoration: none; transition: all .25s;
+    }
+    .nav-cta:hover { background: var(--ink); color: var(--warm-white); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 201; }
+    .hamburger span { width: 24px; height: 1.5px; background: var(--ink); display: block; transition: .3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .mobile-menu {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-overlay {
+      position: absolute; inset: 0;
+      background: rgba(26,23,20,.45);
+      backdrop-filter: blur(4px);
+      animation: fadeIn .25s ease;
+    }
+    .mobile-drawer {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: min(320px, 85vw);
+      background: var(--warm-white);
+      padding: 5rem 2rem 2.5rem;
+      display: flex; flex-direction: column; gap: 0;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(0.4,0,0.2,1);
+      overflow-y: auto;
+    }
+    .mobile-menu.open .mobile-drawer { transform: translateX(0); }
+    .mobile-nav-links { list-style: none; border-top: 1px solid var(--border); }
+    .mobile-nav-links li { border-bottom: 1px solid var(--border); }
+    .mobile-nav-links a {
+      display: block; padding: 1.1rem 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400; color: var(--ink);
+      text-decoration: none; transition: color .2s, padding-left .2s;
+    }
+    .mobile-nav-links a:hover { color: var(--accent); padding-left: .5rem; }
+    .mobile-cta {
+      margin-top: 2rem; display: block;
+      background: var(--ink); color: var(--warm-white);
+      padding: 1rem; text-align: center;
+      font-size: .82rem; font-weight: 500; letter-spacing: .12em;
+      text-transform: uppercase; text-decoration: none;
+      transition: background .25s;
+    }
+    .mobile-cta:hover { background: var(--accent); }
+    .mobile-socials { display: flex; gap: .75rem; margin-top: 2rem; }
+    .mobile-socials a {
+      width: 38px; height: 38px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none; font-size: .78rem;
+      transition: all .2s;
+    }
+    .mobile-socials a:hover { border-color: var(--accent); color: var(--accent); }
+    .mobile-contact { margin-top: 1.5rem; }
+    .mobile-contact a {
+      display: block; font-size: .85rem; color: var(--muted);
+      text-decoration: none; padding: .3rem 0; transition: color .2s;
+    }
+    .mobile-contact a:hover { color: var(--ink); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 72px;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 5rem 3rem 5rem 5rem;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-size: .72rem; font-weight: 500; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 300; line-height: 1.0;
+      color: var(--ink); margin-bottom: 1.5rem;
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-desc {
+      font-size: .95rem; line-height: 1.8; color: var(--muted);
+      max-width: 380px; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--ink); color: var(--warm-white);
+      padding: .9rem 2.2rem; font-size: .82rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      text-decoration: none; transition: all .3s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-ghost {
+      font-size: .82rem; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; display: flex; align-items: center; gap: .5rem;
+      transition: color .2s;
+    }
+    .btn-ghost:hover { color: var(--ink); }
+    .btn-ghost svg { transition: transform .2s; }
+    .btn-ghost:hover svg { transform: translateX(4px); }
+    .hero-stat {
+      position: absolute; bottom: 4rem; left: 5rem;
+      display: flex; gap: 3rem;
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300; color: var(--ink);
+    }
+    .stat-label { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+    .hero-right {
+      position: relative; overflow: hidden; background: var(--cream);
+    }
+    .hero-img-grid {
+      position: absolute; inset: 0;
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+      gap: 4px;
+    }
+    .hero-img-grid > div {
+      overflow: hidden; position: relative;
+    }
+    .hero-img-grid > div img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s ease;
+    }
+    .hero-img-grid > div:hover img { transform: scale(1.05); }
+    .hero-img-grid .main-img {
+      grid-column: 1 / 3; grid-row: 1;
+    }
+    .hero-img-badge {
+      position: absolute; bottom: 1.5rem; right: 1.5rem;
+      background: var(--warm-white); padding: .8rem 1.2rem;
+      font-size: .72rem; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--ink);
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      background: var(--ink); color: var(--accent);
+      padding: .75rem 0; overflow: hidden;
+      border-top: 1px solid #2a2520; border-bottom: 1px solid #2a2520;
+    }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 18s linear infinite;
+    }
+    .marquee-item {
+      padding: 0 2.5rem; font-size: .72rem; font-weight: 500;
+      letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
+      display: flex; align-items: center; gap: 2.5rem;
+    }
+    .marquee-item::after { content: '✦'; font-size: .6rem; color: var(--accent-light); }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── COLLECTION ── */
+    .collection { padding: 6rem 5vw; }
+    .section-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3.5rem;
+    }
+    .section-label {
+      font-size: .72rem; font-weight: 500; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem;
+    }
+    .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 300; line-height: 1.1;
+    }
+    .section-title em { font-style: italic; }
+    .view-all {
+      font-size: .78rem; font-weight: 500; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; display: flex; align-items: center; gap: .5rem;
+      transition: color .2s;
+    }
+    .view-all:hover { color: var(--ink); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card { cursor: pointer; }
+    .product-img {
+      aspect-ratio: 3/4; overflow: hidden;
+      background: var(--cream); position: relative; margin-bottom: 1rem;
+    }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .product-card:hover .product-img img { transform: scale(1.04); }
+    .product-tag {
+      position: absolute; top: 1rem; left: 1rem;
+      background: var(--ink); color: var(--warm-white);
+      font-size: .65rem; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; padding: .3rem .7rem;
+    }
+    .product-tag.sale { background: var(--accent); }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 400; margin-bottom: .25rem;
+    }
+    .product-sub { font-size: .8rem; color: var(--muted); margin-bottom: .5rem; }
+    .product-price {
+      font-size: .9rem; font-weight: 500; color: var(--ink);
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .price-old { text-decoration: line-through; color: var(--muted); font-weight: 400; }
+
+    /* ── BANNER ── */
+    .banner {
+      margin: 2rem 5vw 6rem;
+      background: var(--ink);
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 480px; overflow: hidden;
+    }
+    .banner-content {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem;
+    }
+    .banner-eyebrow {
+      font-size: .72rem; font-weight: 500; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+    }
+    .banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; line-height: 1.0;
+      color: var(--warm-white); margin-bottom: 1.5rem;
+    }
+    .banner-title em { font-style: italic; color: var(--accent); }
+    .banner-desc { font-size: .9rem; line-height: 1.8; color: #9E988E; margin-bottom: 2.5rem; max-width: 340px; }
+    .btn-banner {
+      display: inline-block; background: var(--accent); color: var(--ink);
+      padding: .9rem 2.2rem; font-size: .82rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      text-decoration: none; width: fit-content; transition: all .3s;
+    }
+    .btn-banner:hover { background: var(--accent-light); }
+    .banner-img { overflow: hidden; }
+    .banner-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── FEATURES ── */
+    .features { padding: 5rem 5vw; background: var(--cream); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
+    .feature-item { padding: 2.5rem 2rem; background: var(--warm-white); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 1.25rem; }
+    .feature-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 400; margin-bottom: .6rem;
+    }
+    .feature-desc { font-size: .85rem; line-height: 1.7; color: var(--muted); }
+
+    /* ── TESTIMONIAL ── */
+    .testimonial { padding: 6rem 5vw; text-align: center; }
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.5rem); font-weight: 300; font-style: italic;
+      line-height: 1.5; color: var(--ink);
+      max-width: 700px; margin: 0 auto 2rem;
+    }
+    .testimonial-author {
+      font-size: .78rem; font-weight: 500; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .testimonial-stars { color: var(--accent); font-size: .9rem; margin-bottom: 1.5rem; letter-spacing: .2em; }
+    .testimonials-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem; margin-top: 4rem; text-align: left;
+    }
+    .tcard {
+      padding: 2rem; border: 1px solid var(--border);
+      background: var(--warm-white);
+    }
+    .tcard-stars { color: var(--accent); font-size: .85rem; margin-bottom: 1rem; }
+    .tcard-text { font-size: .9rem; line-height: 1.75; color: var(--muted); margin-bottom: 1.5rem; font-style: italic; }
+    .tcard-author { font-size: .78rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter { background: var(--cream); padding: 5rem 5vw; text-align: center; }
+    .newsletter .section-label { justify-content: center; }
+    .newsletter .section-label::before { display: none; }
+    .newsletter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 300;
+      margin-bottom: 1rem;
+    }
+    .newsletter-desc { font-size: .9rem; color: var(--muted); margin-bottom: 2.5rem; }
+    .newsletter-form {
+      display: flex; gap: 0; max-width: 440px; margin: 0 auto;
+    }
+    .newsletter-form input {
+      flex: 1; padding: .9rem 1.25rem; border: 1.5px solid var(--ink);
+      border-right: none; background: var(--warm-white);
+      font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--ink);
+      outline: none;
+    }
+    .newsletter-form input::placeholder { color: var(--muted); }
+    .newsletter-form button {
+      padding: .9rem 1.5rem; background: var(--ink); color: var(--warm-white);
+      border: 1.5px solid var(--ink); cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: .78rem;
+      font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+      white-space: nowrap; transition: all .25s;
+    }
+    .newsletter-form button:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: var(--warm-white);
+      padding: 4rem 5vw 2rem;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand .nav-logo { color: var(--warm-white); display: block; margin-bottom: 1rem; }
+    .footer-brand p { font-size: .88rem; line-height: 1.7; color: #9E988E; max-width: 260px; }
+    .footer-socials { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .social-link {
+      width: 36px; height: 36px; border: 1px solid #3a3530;
+      display: flex; align-items: center; justify-content: center;
+      color: #9E988E; text-decoration: none; font-size: .8rem;
+      transition: all .2s;
+    }
+    .social-link:hover { border-color: var(--accent); color: var(--accent); }
+    .footer-col-title {
+      font-size: .72rem; font-weight: 500; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
+    .footer-links a { font-size: .88rem; color: #9E988E; text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--warm-white); }
+    .footer-bottom {
+      border-top: 1px solid #2a2520; padding-top: 1.75rem;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .78rem; color: #6B6560;
+    }
+
+    /* ── WHATSAPP FLOAT ── */
+    .whatsapp-float {
+      position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 999;
+      display: flex; align-items: center; gap: .75rem;
+      text-decoration: none;
+      animation: popIn .5s .8s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .whatsapp-label {
+      background: var(--ink); color: var(--warm-white);
+      padding: .5rem 1rem; font-size: .78rem; font-weight: 500;
+      letter-spacing: .08em; white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0,0,0,.18);
+      opacity: 0; transform: translateX(10px);
+      transition: all .3s;
+    }
+    .whatsapp-float:hover .whatsapp-label { opacity: 1; transform: translateX(0); }
+    .whatsapp-btn {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25D366; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,.4);
+      transition: transform .25s, box-shadow .25s;
+      position: relative;
+    }
+    .whatsapp-btn::before {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid rgba(37,211,102,.3);
+      animation: pulse 2s infinite;
+    }
+    .whatsapp-float:hover .whatsapp-btn {
+      transform: scale(1.1);
+      box-shadow: 0 8px 28px rgba(37,211,102,.55);
+    }
+    .whatsapp-btn svg { width: 28px; height: 28px; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 3.5rem 1.5rem 2rem; }
+      .hero-stat { left: 1.5rem; bottom: 2rem; }
+      .hero-right { min-height: 320px; height: 55vw; }
+      .banner { grid-template-columns: 1fr; }
+      .banner-img { min-height: 280px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-links, .nav-cta { display: none !important; }
+      .hamburger { display: flex; }
+      .collection { padding: 4rem 1.25rem; }
+      .features { padding: 4rem 1.25rem; }
+      .testimonial { padding: 4rem 1.25rem; }
+      .newsletter { padding: 4rem 1.25rem; }
+      .banner { margin: 2rem 1.25rem 4rem; }
+      .banner-content { padding: 2.5rem 2rem; }
+    }
+    @media (max-width: 560px) {
+      .hero-stat { gap: 2rem; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: .75rem; text-align: center; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form input { border-right: 1.5px solid var(--ink); border-bottom: none; }
+      .newsletter-form button { padding: .9rem; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+      .hero-title { font-size: 2.8rem; }
+      .hero-left { padding: 2.5rem 1.25rem 8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">DRÈSS</a>
+  <ul class="nav-links">
+    <li><a href="#collection">New In</a></li>
+    <li><a href="#collection">Collections</a></li>
+    <li><a href="#lookbook">Lookbook</a></li>
+    <li><a href="#contact">About</a></li>
+  </ul>
+  <a href="#collection" class="nav-cta">Shop Now</a>
+  <div class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="mobile-drawer">
+    <ul class="mobile-nav-links">
+      <li><a href="#collection" class="mobile-link">New In</a></li>
+      <li><a href="#collection" class="mobile-link">Collections</a></li>
+      <li><a href="#lookbook" class="mobile-link">Lookbook</a></li>
+      <li><a href="#features" class="mobile-link">About</a></li>
+      <li><a href="#testimonial" class="mobile-link">Reviews</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+    </ul>
+    <a href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20your%20fashion%20pieces!" class="mobile-cta" target="_blank" rel="noopener">Order on WhatsApp</a>
+    <div class="mobile-socials">
+      <a href="https://instagram.com" target="_blank" rel="noopener">IG</a>
+      <a href="https://tiktok.com" target="_blank" rel="noopener">TK</a>
+      <a href="https://wa.me/2348000000000" target="_blank" rel="noopener">WA</a>
+      <a href="https://facebook.com" target="_blank" rel="noopener">FB</a>
+    </div>
+    <div class="mobile-contact">
+      <a href="tel:+2348000000000">📞 +234 800 000 0000</a>
+      <a href="mailto:hello@dress.ng">✉️ hello@dress.ng</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">New Collection 2025</div>
+    <h1 class="hero-title">
+      Wear Your<br><em>Story,</em><br>Own Your Look
+    </h1>
+    <p class="hero-desc">
+      Thoughtfully crafted pieces for the woman who knows her worth. Premium fabrics, timeless silhouettes, made for every moment.
+    </p>
+    <div class="hero-actions">
+      <a href="#collection" class="btn-primary">Explore Collection</a>
+      <a href="#lookbook" class="btn-ghost">
+        View Lookbook
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-stat">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Pieces Sold</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Customer Rating</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Authentic</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-grid">
+      <div class="main-img">
+        <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=80" alt="Fashion model in elegant dress" />
+        <div class="hero-img-badge">New Arrivals ↗</div>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80" alt="Model in stylish outfit" />
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&q=80" alt="Fashion detail" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <div class="marquee-item">New Arrivals</div>
+    <div class="marquee-item">Free Delivery in Lagos</div>
+    <div class="marquee-item">Premium Quality</div>
+    <div class="marquee-item">Order via WhatsApp</div>
+    <div class="marquee-item">Exclusive Pieces</div>
+    <div class="marquee-item">Fast Delivery Nationwide</div>
+    <div class="marquee-item">New Arrivals</div>
+    <div class="marquee-item">Free Delivery in Lagos</div>
+    <div class="marquee-item">Premium Quality</div>
+    <div class="marquee-item">Order via WhatsApp</div>
+    <div class="marquee-item">Exclusive Pieces</div>
+    <div class="marquee-item">Fast Delivery Nationwide</div>
+  </div>
+</div>
+
+<!-- COLLECTION -->
+<section class="collection" id="collection">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Curated For You</div>
+      <h2 class="section-title">Featured <em>Pieces</em></h2>
+    </div>
+    <a href="https://wa.me/2348000000000?text=Hi%2C%20I%27d%20like%20to%20see%20all%20your%20collections!" class="view-all" target="_blank" rel="noopener">
+      View All
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="product-grid">
+    <a class="product-card" href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20the%20Ivory%20Linen%20Co-ord%20Set!" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <div class="product-img">
+        <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=600&q=80" alt="Ivory Linen Co-ord Set" />
+        <span class="product-tag">New In</span>
+      </div>
+      <div class="product-name">Ivory Linen Co-ord Set</div>
+      <div class="product-sub">Two-piece · Sizes XS–XL</div>
+      <div class="product-price">₦45,000</div>
+    </a>
+
+    <a class="product-card" href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20the%20Terracotta%20Midi%20Dress!" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <div class="product-img">
+        <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80" alt="Terracotta Midi Dress" />
+        <span class="product-tag sale">Trending</span>
+      </div>
+      <div class="product-name">Terracotta Midi Dress</div>
+      <div class="product-sub">Flowy · Sizes S–XXL</div>
+      <div class="product-price">
+        ₦38,000
+        <span class="price-old">₦48,000</span>
+      </div>
+    </a>
+
+    <a class="product-card" href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20the%20Black%20Power%20Blazer!" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <div class="product-img">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" alt="Black Power Blazer" />
+      </div>
+      <div class="product-name">Black Power Blazer</div>
+      <div class="product-sub">Structured · Sizes XS–L</div>
+      <div class="product-price">₦52,000</div>
+    </a>
+
+    <a class="product-card" href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20the%20Signature%20White%20Shirt!" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;">
+      <div class="product-img">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80" alt="Classic White Shirt" />
+        <span class="product-tag">Bestseller</span>
+      </div>
+      <div class="product-name">Signature White Shirt</div>
+      <div class="product-sub">Classic Fit · Sizes XS–XXL</div>
+      <div class="product-price">₦22,000</div>
+    </a>
+  </div>
+</section>
+
+<!-- BANNER -->
+<div class="banner" id="lookbook">
+  <div class="banner-content">
+    <div class="banner-eyebrow">Limited Edition</div>
+    <h2 class="banner-title">The Evening <em>Edit</em></h2>
+    <p class="banner-desc">
+      Our most-requested collection is finally here. Statement pieces designed for nights that matter — bold, refined, unforgettable.
+    </p>
+    <a href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20the%20Evening%20Edit%20collection!" class="btn-banner" target="_blank" rel="noopener">Shop the Edit</a>
+  </div>
+  <div class="banner-img">
+    <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80" alt="Evening collection" />
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon">🚚</div>
+      <div class="feature-title">Fast Delivery</div>
+      <div class="feature-desc">Lagos same-day delivery available. Nationwide shipping within 2–4 business days.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🪡</div>
+      <div class="feature-title">Premium Quality</div>
+      <div class="feature-desc">Every piece is carefully selected for fabric quality, fit, and lasting wear.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📦</div>
+      <div class="feature-title">Easy Returns</div>
+      <div class="feature-desc">Not in love with it? Return within 7 days for exchange or store credit.</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">💬</div>
+      <div class="feature-title">WhatsApp Support</div>
+      <div class="feature-desc">Order, ask questions, or get styling advice - all on WhatsApp. We respond fast.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonial" id="testimonial">
+  <div class="section-label" style="justify-content:center; margin-bottom:.75rem;">
+    <span>What Our Customers Say</span>
+  </div>
+  <h2 class="section-title" style="margin-bottom:1.5rem;">Loved by <em>Many</em></h2>
+  <div class="testimonials-row">
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <div class="tcard-text">"The Terracotta Midi Dress is absolutely stunning. Quality is top-notch and delivery was so fast. I've gotten so many compliments!"</div>
+      <div class="tcard-author">Adaeze O. - Lagos</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <div class="tcard-text">"I love how the pieces are unique and not what you see everywhere. The WhatsApp ordering made it so easy. Will definitely buy again."</div>
+      <div class="tcard-author">Fatima K. — Abuja</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars">★★★★★</div>
+      <div class="tcard-text">"Best online fashion shop in Nigeria. My blazer arrived perfectly packaged and fits like it was made for me. 10/10 experience!"</div>
+      <div class="tcard-author">Chisom A. — Port Harcourt</div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter" id="contact">
+  <div class="section-label">Stay in the Loop</div>
+  <h2 class="newsletter-title">New Drops. <em>First.</em></h2>
+  <p class="newsletter-desc">Join our list and get early access to new collections, exclusive offers, and style inspo.</p>
+  <div class="newsletter-form">
+    <input type="email" placeholder="Your email address" />
+    <button type="button">Subscribe</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#hero" class="nav-logo">DRÈSS</a>
+      <p>Fashion that tells your story. Contemporary pieces curated for the modern Nigerian woman. Shop online, delivered to your door.</p>
+      <div class="footer-socials">
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="social-link">IG</a>
+        <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-link">TK</a>
+        <a href="https://wa.me/2348000000000" target="_blank" rel="noopener" class="social-link">WA</a>
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="social-link">FB</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Shop</div>
+      <ul class="footer-links">
+        <li><a href="#collection">New Arrivals</a></li>
+        <li><a href="#collection">Dresses</a></li>
+        <li><a href="#collection">Co-ord Sets</a></li>
+        <li><a href="#collection">Tops & Shirts</a></li>
+        <li><a href="#collection">Accessories</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Help</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/2348000000000?text=Hi%2C%20I%20need%20a%20size%20guide!" target="_blank" rel="noopener">Size Guide</a></li>
+        <li><a href="https://wa.me/2348000000000?text=Hi%2C%20I%20need%20shipping%20info!" target="_blank" rel="noopener">Shipping Info</a></li>
+        <li><a href="https://wa.me/2348000000000?text=Hi%2C%20I%20need%20help%20with%20a%20return!" target="_blank" rel="noopener">Returns</a></li>
+        <li><a href="https://wa.me/2348000000000?text=Hi%2C%20I%20have%20a%20question!" target="_blank" rel="noopener">FAQs</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="tel:+2348000000000">+234 800 000 0000</a></li>
+        <li><a href="mailto:hello@dress.ng">hello@dress.ng</a></li>
+        <li><a href="#">Mon–Sat: 9am–6pm</a></li>
+        <li><a href="https://maps.google.com/?q=Lagos,Nigeria" target="_blank" rel="noopener">Lagos, Nigeria</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 DRÈSS. All rights reserved.</span>
+    <span>
+      <a href="#" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--accent-light)'" onmouseout="this.style.color='inherit'">Privacy Policy</a>
+      · 
+      <a href="#" style="color:inherit;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--accent-light)'" onmouseout="this.style.color='inherit'">Terms of Service</a>
+    </span>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/2348000000000?text=Hi%2C%20I%27m%20interested%20in%20your%20fashion%20pieces!" class="whatsapp-float" target="_blank" rel="noopener">
+  <span class="whatsapp-label">Chat with us</span>
+  <div class="whatsapp-btn">
+    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </div>
+</a>
+
+<script>
+  // ── MOBILE MENU ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    hamburger.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  mobileOverlay.addEventListener('click', closeMenu);
+
+  // Close drawer when any mobile nav link is clicked
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // ── NEWSLETTER ──
+  const newsletterBtn = document.querySelector('.newsletter-form button');
+  const newsletterInput = document.querySelector('.newsletter-form input');
+  newsletterBtn.addEventListener('click', () => {
+    const email = newsletterInput.value.trim();
+    if (!email || !email.includes('@')) {
+      newsletterInput.style.borderColor = '#C9624E';
+      newsletterInput.focus();
+      setTimeout(() => newsletterInput.style.borderColor = '', 1500);
+      return;
+    }
+    newsletterBtn.textContent = '✓ Subscribed!';
+    newsletterBtn.style.background = '#4CAF50';
+    newsletterBtn.style.borderColor = '#4CAF50';
+    newsletterInput.value = '';
+    setTimeout(() => {
+      newsletterBtn.textContent = 'Subscribe';
+      newsletterBtn.style.background = '';
+      newsletterBtn.style.borderColor = '';
+    }, 3000);
+  });
+  newsletterInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') newsletterBtn.click();
+  });
+</script>
+</body>
+</html>
